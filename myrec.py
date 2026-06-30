@@ -235,6 +235,7 @@ class MyRecApp:
         self._last_popup_abs_min: int = -1            # 二重発火防止（0〜1439）
 
         self._build_ui()
+        self._set_record_ui_enabled(True)
         # 起動直後に最小化
         self.root.after(200, self.root.iconify)
         # タイマー開始
@@ -281,7 +282,7 @@ class MyRecApp:
                   command=self._on_aggregate
                   ).grid(row=0, column=3, padx=2, pady=4)
 
-        # 作業内容入力（コンボボックス）—— ポップアップ時のみ有効
+        # 作業内容入力（コンボボックス）
         self.combo_var = tk.StringVar()
         self.combo = ttk.Combobox(frame, textvariable=self.combo_var, width=42,
                                   state="disabled")
@@ -292,6 +293,12 @@ class MyRecApp:
 
     def _refresh_combo(self) -> None:
         self.combo["values"] = [h["task"] for h in self.history]
+
+    def _set_record_ui_enabled(self, enabled: bool, *, focus: bool = False) -> None:
+        self.btn_record.config(state=tk.NORMAL if enabled else tk.DISABLED)
+        self.combo.config(state="normal" if enabled else "disabled")
+        if enabled and focus:
+            self.combo.focus_set()
 
     # ------------------------------------------------------------------
     # タイマー（ポップアップ制御）
@@ -340,9 +347,7 @@ class MyRecApp:
             self.root.focus_force()
 
         # 記録UIを有効化
-        self.btn_record.config(state=tk.NORMAL)
-        self.combo.config(state="normal")
-        self.combo.focus_set()
+        self._set_record_ui_enabled(True, focus=True)
 
     # ------------------------------------------------------------------
     # ボタンハンドラ
@@ -367,8 +372,7 @@ class MyRecApp:
         self.responded = True
 
         # 記録UIを無効化
-        self.btn_record.config(state=tk.DISABLED)
-        self.combo.config(state="disabled")
+        self._set_record_ui_enabled(False)
         self.root.iconify()
 
     def _on_open(self) -> None:
