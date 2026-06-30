@@ -272,8 +272,7 @@ class MyRecApp:
 
         # ボタン群
         self.btn_record = tk.Button(frame, text="記録", width=6,
-                                    command=self._on_record,
-                                    state=tk.DISABLED)
+                                    command=self._on_record)
         self.btn_record.grid(row=0, column=1, padx=2, pady=4)
         tk.Button(frame, text="開く", width=6,
                   command=self._on_open
@@ -284,8 +283,7 @@ class MyRecApp:
 
         # 作業内容入力（コンボボックス）
         self.combo_var = tk.StringVar()
-        self.combo = ttk.Combobox(frame, textvariable=self.combo_var, width=42,
-                                  state="disabled")
+        self.combo = ttk.Combobox(frame, textvariable=self.combo_var, width=42)
         self.combo.grid(row=1, column=0, columnspan=4,
                         padx=4, pady=(0, 4), sticky="ew")
         self.combo.bind("<Return>", lambda _e: self._on_record())
